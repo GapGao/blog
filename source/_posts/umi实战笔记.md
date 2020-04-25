@@ -56,10 +56,10 @@ yarn create umi 使用create-umi脚手架来快速创建项目代码
 > 4.这里为了快速熟悉umi先用antd(ant-design-pro)布局的搭建一个小项目
 >> 1.创建好之后 执行 yarn 安装依赖
 >> 文件目录：
->> ![avatar](/img/antd-design-pro-menu.png)
+>> ![avatar](/img/umi/antd-design-pro-menu.png)
 >> 2.yarn start 启动项目
 >> 效果：
->> ![avatar](/img/antd-umi.png)
+>> ![avatar](/img/umi/antd-umi.png)
 >> ...
 >> 看完这个项目之后，我发现都是一些比较个性化的配置，不适合初学者使用学习，
 >> 放弃，回归到选用app，搭建一个通用项目来学习，很尴尬
@@ -69,10 +69,10 @@ yarn create umi 使用create-umi脚手架来快速创建项目代码
 >> 2.选择 app -> use typescript N -> [antd, dva, code splitting]
 >> 3.yarn 安装依赖
 >> 目录：
->> ![avatar](/img/app-menu.png)
+>> ![avatar](/img/umi/app-menu.png)
 >> 4.yarn start
 >> 效果：
->> ![avatar](/img/app-umi.png)
+>> ![avatar](/img/umi/app-umi.png)
 
 # 文件目录介绍
 
