@@ -559,6 +559,7 @@ const cityName = country.province
 ```javascript
 const obj = {
   person: {},
+  any: null,
 };
 
 get(obj)() === obj;
@@ -583,9 +584,11 @@ function get (obj) {
 get(obj).person; // {}
 get(obj).person.name; // undefined
 get(obj).person.name.xxx.yyy.zzz; // Cannot read property 'xxx' of undefined
+get(obj).person.sex; // null
+get(obj).person.sex.xxx; // Cannot read property 'xxx' of null
 ```
 
-前两个测试用例是成功了，但第三个还是不行，因为 `get(obj).person.name` 是 `undefined`, 所以接下来的重点是处理属性为 `undefined` 的情况。
+前两个测试用例是成功了，但第三个还是不行，因为 `get(obnullj).person.name` 是 `undefined`, `get(obj).person.sex` 是 `null`，所以接下来的重点是处理属性为 `undefined` 和 `` 的情况。
 对这个 get 方法进行一下简单的改造，这次不再直接返回 target[prop]，而是返回一个代理对象，让第三个例子不再报错。
 
 ```javascript
@@ -598,17 +601,18 @@ function get (obj) {
 };
 ```
 
-嗯，看起来有点儿高大上了，但是 `target[prop]` 为 `undefined` 的时候，传给 get 方法的就是 `undefined` 了，而 Proxy 第一个参数必须为对象，这样岂不是会报错？
-所以，需要对 `obj` 为 `undefined` 的时候进行特殊处理，为了能够深层取值，只能对值为 `undefined` 的属性设置默认值为空对象。
+嗯，看起来有点儿高大上了，但是 `target[prop]` 为 `undefined` 或 `null` 的时候，传给 get 方法的就是 `undefined`  或 `null` 了，而 Proxy 第一个参数必须为对象，这样岂不是会报错？
+所以，需要对 `obj` 为 `undefined` 或 `null` 的时候进行特殊处理，为了能够深层取值，只能对值为 `undefined` 或 `null` 的属性设置默认值为空对象。
 
 ```javascript
 function get (obj = {}) {
-    return new Proxy(obj, {
-        get(target, prop) {
-            return get(target[prop]);
-        }
-    })
-}
+  return new Proxy(obj, {
+    get(target, prop) {
+      return get(target[prop]);
+    },
+  });
+};
+
 get(obj).person; // {}
 get(obj).person.name; // {}
 get(obj).person.name.xxx.yyy.zzz; // {}
@@ -623,13 +627,13 @@ function noop() {}
 function get (obj) {
   // 注意这里拦截的是 noop 函数
   return new Proxy(noop, {
-      // 这里支持返回执行的时候传入的参数
-      apply(target, context, [arg]) {
-        return obj;
-      },
-      get(target, prop) {
-        return get(obj[prop]);
-      },
+    // 这里支持返回执行的时候传入的参数
+    apply(target, context, [arg]) {
+      return obj;
+    },
+    get(target, prop) {
+      return get(obj[prop]);
+    },
   });
 };
 ```
@@ -642,27 +646,27 @@ get(obj).person.name(); // undefined
 get(obj).person.name.xxx.yyy.zzz(); // Cannot read property 'xxx' of undefined
 ```
 
-我们理想中的应该是，如果属性为 `undefined` 就返回 `undefined`，但仍要支持访问下级属性，而不是抛出错误。顺着这个思路来的话，很明显当属性为 `undefined` 的时候也需要用 Proxy 进行特殊处理。
+我们理想中的应该是，如果属性为 `undefined` 或 `null` 就返回 `undefined`，但仍要支持访问下级属性，而不是抛出错误。顺着这个思路来的话，很明显当属性为 `undefined` 或 `null` 的时候也需要用 Proxy 进行特殊处理。
 所以我们需要一个具有下面特性的 get 方法：
 
 ```javascript
 get(undefined)() === undefined; // true
-get(undefined).xxx.yyy.zzz() // undefined
+get(null).xxx.yyy.zzz() // undefined
 ```
 
-和前面的困扰不一样的地方是，这里完全不需要注意 get(undefined).xxx 是否为正确的值，因为想获取值必须要执行才能拿到。那么只需要对所有 undefined 后面访问的属性都默认为 undefined 就好了。
+和前面的困扰不一样的地方是，这里完全不需要注意 `get(undefined).xxx` 是否为正确的值，因为想获取值必须要执行才能拿到。那么只需要对所有 `undefined` 或 `null` 后面访问的属性都默认为 undefined 就好了。
 
 ```javascript
 function noop() {};
 function get (obj) {
-  if (obj === undefined) {
+  if (obj === undefined || obj === null) {
     return proxyVoid;
   }
   // 注意这里拦截的是 noop 函数
   return new Proxy(noop, {
     // 这里支持返回执行的时候传入的参数
     apply(target, context, [arg]) {
-      return obj === undefined ? arg : obj;
+      return (obj === undefined || obj === null) ? arg : obj;
     },
     get(target, prop) {
       if (
@@ -691,17 +695,17 @@ let isFirst = true;
 function noop() {}
 let proxyVoid = get(undefined);
 function get(obj) {
-  if (obj === undefined && !isFirst) {
+  if ((obj === undefined || obj === null) && !isFirst) {
     return proxyVoid;
   }
-  if (obj === undefined && isFirst) {
+  if ((obj === undefined || obj === null) && isFirst) {
     isFirst = false;
   }
   // 注意这里拦截的是 noop 函数
   return new Proxy(noop, {
     // 这里支持返回执行的时候传入的参数
     apply(target, context, [arg]) {
-      return obj === undefined ? arg : obj;
+      return (obj === undefined || obj === null) ? arg : obj;
     },
     get(target, prop) {
       if (
@@ -742,7 +746,7 @@ function get(obj) {
   return new Proxy(noop, {
     // 这里支持返回执行的时候传入的参数
     apply(target, context, [arg]) {
-      return obj === undefined || obj === null ? arg : obj;
+      return (obj === undefined || obj === null) ? arg : obj;
     },
     get(target, prop) {
       if (
