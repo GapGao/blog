@@ -1,7 +1,7 @@
 ---
 title: webpack-rollup-parcel
 date: 2020-05-17 20:12:25
-tags: 【webpack, rollup, parcel, 打包】
+tags: [webpack, rollup, parcel, 打包]
 ---
 
 webpack rollup parcel 应该用哪个？
