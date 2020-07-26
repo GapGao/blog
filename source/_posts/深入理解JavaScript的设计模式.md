@@ -37,18 +37,17 @@ tags: [javascript, 前端]
 该模式使用 iife（即时调用函数表达式）、闭包和函数作用域来模拟这个概念，例如：
 
 ```javascript
-const myModule = (function() {
-
-  const privateVariable = 'Hello World';
+const myModule = (function () {
+  const privateVariable = "Hello World";
 
   function privateMethod() {
     console.log(privateVariable);
   }
   return {
-    publicMethod: function() {
+    publicMethod: function () {
       privateMethod();
-    }
-  }
+    },
+  };
 })();
 myModule.publicMethod();
 ```
@@ -61,9 +60,9 @@ myModule.publicMethod();
 
 ```javascript
 const myModule = {
-  publicMethod: function() {
+  publicMethod: function () {
     privateMethod();
-  }
+  },
 };
 ```
 
@@ -81,12 +80,11 @@ module.publicMethod();
 在这个模式中，我们将把返回对象的属性映射到我们想要公开的私有函数。这就是为什么它被称为揭示模块模式，例如：
 
 ```javascript
-const myRevealingModule = (function() {
-
-  let privateVar = 'Peter';
-  const publicVar  = 'Hello World';
+const myRevealingModule = (function () {
+  let privateVar = "Peter";
+  const publicVar = "Hello World";
   function privateFunction() {
-    console.log('Name: '+ privateVar);
+    console.log("Name: " + privateVar);
   }
 
   function publicSetName(name) {
@@ -99,10 +97,10 @@ const myRevealingModule = (function() {
   return {
     setName: publicSetName,
     greeting: publicVar,
-    getName: publicGetName
+    getName: publicGetName,
   };
 })();
-myRevealingModule.setName('Mark');
+myRevealingModule.setName("Mark");
 // 打印姓名：Mark
 myRevealingModule.getName();
 ```
@@ -115,22 +113,22 @@ myRevealingModule.getName();
 const myRevealingModule = {
   setName: publicSetName,
   greeting: publicVar,
-  getName: publicGetName
+  getName: publicGetName,
 };
 ```
 
 我们可以调用 myrevealingmodule. setname ('Mark')，它是对方法 publicSetName 的引用，而 myRevealingModule.getName() 是对内部方法 publicGetName 的引用，例如:
 
 ```javascript
-myRevealingModule.setName('Mark');
+myRevealingModule.setName("Mark");
 // 打印姓名：Mark
 myRevealingModule.getName();
 ```
 
 ### 与模块模式相比，揭示模块模式的优点如下
 
-* 通过修改 return 语句中的一行代码，我们就可以将成员从 public 更改为 private，反之亦然。
-* 返回的对象不包含任何函数定义，所有右侧表达式都在 iife 中定义，这使得代码清晰且易于阅读。
+- 通过修改 return 语句中的一行代码，我们就可以将成员从 public 更改为 private，反之亦然。
+- 返回的对象不包含任何函数定义，所有右侧表达式都在 iife 中定义，这使得代码清晰且易于阅读。
 
 ## ES6 模块
 
@@ -146,18 +144,18 @@ ES6 模块存储在文件中。每个文件只能有一个模块。默认情况�
 
 ```javascript
 // utils.js
-export const greeting = 'Hello World';
+export const greeting = "Hello World";
 export function sum(num1, num2) {
-  console.log('Sum:', num1, num2);
+  console.log("Sum:", num1, num2);
   return num1 + num2;
 }
 export function subtract(num1, num2) {
-  console.log('Subtract:', num1, num2);
+  console.log("Subtract:", num1, num2);
   return num1 - num2;
 }
 // 这是一个私有函数
 function privateLog() {
-  console.log('Private Function');
+  console.log("Private Function");
 }
 ```
 
@@ -166,18 +164,18 @@ function privateLog() {
 ```javascript
 // utils.js
 function multiply(num1, num2) {
-  console.log('Multiply:', num1, num2);
+  console.log("Multiply:", num1, num2);
   return num1 * num2;
 }
 function divide(num1, num2) {
-  console.log('Divide:', num1, num2);
+  console.log("Divide:", num1, num2);
   return num1 / num2;
 }
 // 这是一个私有函数
 function privateLog() {
-  console.log('Private Function');
+  console.log("Private Function");
 }
-export {multiply, divide};
+export { multiply, divide };
 ```
 
 ### 导入模块
@@ -189,7 +187,7 @@ export {multiply, divide};
 ```javascript
 // main.js
 // 导入多个项
-import { sum, multiply } from './utils.js';
+import { sum, multiply } from "./utils.js";
 console.log(sum(3, 7));
 console.log(multiply(3, 7));
 ```
@@ -199,7 +197,7 @@ console.log(multiply(3, 7));
 ```javascript
 // main.js
 // 导入所有模块
-import * as utils from './utils.js';
+import * as utils from "./utils.js";
 console.log(utils.sum(3, 7));
 console.log(utils.multiply(3, 7));
 ```
@@ -213,21 +211,21 @@ console.log(utils.multiply(3, 7));
 ```javascript
 // utils.js
 function sum(num1, num2) {
-  console.log('Sum:', num1, num2);
+  console.log("Sum:", num1, num2);
   return num1 + num2;
 }
 function multiply(num1, num2) {
-  console.log('Multiply:', num1, num2);
+  console.log("Multiply:", num1, num2);
   return num1 * num2;
 }
-export {sum as add, multiply};
+export { sum as add, multiply };
 ```
 
 重命名导入：
 
 ```javascript
 // main.js
-import { add, multiply as mult } from './utils.js';
+import { add, multiply as mult } from "./utils.js";
 console.log(add(3, 7));
 console.log(mult(3, 7));
 ```
@@ -240,12 +238,12 @@ JavaScript 语言一直都内置了的单例，只是我们不把它们叫做单
 
 ```javascript
 const user = {
-  name: 'Peter',
+  name: "Peter",
   age: 25,
-  job: 'Teacher',
-  greet: function() {
-    console.log('Hello!');
-  }
+  job: "Teacher",
+  greet: function () {
+    console.log("Hello!");
+  },
 };
 ```
 
@@ -255,7 +253,7 @@ const user = {
 
 ```javascript
 const user1 = user;
-user1.name = 'Mark';
+user1.name = "Mark";
 ```
 
 我们会看到，两个对象都被修改了，因为在 JavaScript 中，对象是通过引用传递的，而不是值。因此，内存中只有一个对象，例如：
@@ -274,11 +272,11 @@ console.log(user === user1);
 ```javascript
 let instance = null;
 function User() {
-  if(instance) {
+  if (instance) {
     return instance;
   }
   instance = this;
-  this.name = 'Peter';
+  this.name = "Peter";
   this.age = 25;
 
   return instance;
@@ -294,24 +292,24 @@ console.log(user1 === user2);
 单例也可以使用模块模式实现，例如：
 
 ```javascript
-const singleton = (function() {
+const singleton = (function () {
   let instance;
 
   function init() {
     return {
-      name: 'Peter',
+      name: "Peter",
       age: 24,
     };
   }
   return {
-    getInstance: function() {
-      if(!instance) {
+    getInstance: function () {
+      if (!instance) {
         instance = init();
       }
 
       return instance;
-    }
-  }
+    },
+  };
 })();
 const instanceA = singleton.getInstance();
 const instanceB = singleton.getInstance();
@@ -328,27 +326,27 @@ console.log(instanceA === instanceB);
 工厂模式用于创建对象，而不公开实例化逻辑。当我们需要根据特定条件生成不同的对象时，可以使用此模式，例如：
 
 ```javascript
-class Car{
+class Car {
   constructor(options) {
     this.doors = options.doors || 4;
-    this.state = options.state || 'brand new';
-    this.color = options.color || 'white';
+    this.state = options.state || "brand new";
+    this.color = options.color || "white";
   }
 }
 class Truck {
   constructor(options) {
     this.doors = options.doors || 4;
-    this.state = options.state || 'used';
-    this.color = options.color || 'black';
+    this.state = options.state || "used";
+    this.color = options.color || "black";
   }
 }
 class VehicleFactory {
   createVehicle(options) {
-    if(options.vehicleType === 'car') {
+    if (options.vehicleType === "car") {
       return new Car(options);
-    } else if(options.vehicleType === 'truck') {
+    } else if (options.vehicleType === "truck") {
       return new Truck(options);
-      }
+    }
   }
 }
 ```
@@ -358,16 +356,16 @@ class VehicleFactory {
 ```javascript
 const factory = new VehicleFactory();
 const car = factory.createVehicle({
-  vehicleType: 'car',
+  vehicleType: "car",
   doors: 4,
-  color: 'silver',
-  state: 'Brand New'
+  color: "silver",
+  state: "Brand New",
 });
-const truck= factory.createVehicle({
-  vehicleType: 'truck',
+const truck = factory.createVehicle({
+  vehicleType: "truck",
   doors: 2,
-  color: 'white',
-  state: 'used'
+  color: "white",
+  state: "used",
 });
 // 打印 Car {doors: 4, state: "Brand New", color: "silver"}
 console.log(car);
@@ -387,18 +385,18 @@ console.log(truck);
 function Car(name) {
   this.name = name;
   // 默认值
-  this.color = 'White';
+  this.color = "White";
 }
 // 新建一个需要装饰的对象
-const tesla= new Car('Tesla Model 3');
+const tesla = new Car("Tesla Model 3");
 // 使用新功能装饰对象
-tesla.setColor = function(color) {
+tesla.setColor = function (color) {
   this.color = color;
-}
-tesla.setPrice = function(price) {
+};
+tesla.setPrice = function (price) {
   this.price = price;
-}
-tesla.setColor('black');
+};
+tesla.setColor("black");
 tesla.setPrice(49000);
 // 打印 black
 console.log(tesla.color);
@@ -424,35 +422,35 @@ class CarWithACandPowerLocks {
 ```javascript
 class Car {
   constructor() {
-  // 默认值
-  this.cost = function() {
-  return 20000;
+    // 默认值
+    this.cost = function () {
+      return 20000;
+    };
   }
-}
 }
 // 装饰函数
 function carWithAC(car) {
   car.hasAC = true;
   const prevCost = car.cost();
-  car.cost = function() {
+  car.cost = function () {
     return prevCost + 500;
-  }
+  };
 }
 // 装饰函数
 function carWithAutoTransmission(car) {
   car.hasAutoTransmission = true;
-   const prevCost = car.cost();
-  car.cost = function() {
+  const prevCost = car.cost();
+  car.cost = function () {
     return prevCost + 2000;
-  }
+  };
 }
 // 装饰函数
 function carWithPowerLocks(car) {
   car.hasPowerLocks = true;
   const prevCost = car.cost();
-  car.cost = function() {
+  car.cost = function () {
     return prevCost + 500;
-  }
+  };
 }
 ```
 
