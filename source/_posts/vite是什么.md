@@ -80,7 +80,7 @@ yarn create @vitejs/app
 ```shell
 npm i
 &&
-npx vite
+npm run dev
 ```
 
 项目起来了
@@ -238,6 +238,22 @@ console.log(Vue);
 并且对于引用过的 node_modules 里的依赖，都会被 vite 进行压缩处理，放到 node_modules/.vite 下进行缓存，后续无需再处理，直接使用，提高了加载速度。
 
 并且还看到了 esbuild，总之就是，极致的效率体验~
+
+## prod
+
+执行 `npm run build`
+
+![avatar](/img/vite/11.png)
+
+可以看到通过 rollup 打包出了一个dist
+
+尤大大没用webpack，而是用了rollup，跟webpack开发者在推特的中文对话，也是挺有意思。
+也看的出rollup升级发展迅速，性能强劲，逐渐的被大家所接受，使用，之前写过一篇对比的博客
+<a href="/2020/05/17/webpack-rollup-parcel" target="_self">webpack-rollup-parcel</a>。
+
+再执行 `npm run serve`
+
+vite 会以 dist 起一个静态访问服务，但是打包出来的好像还是esmodule，index.html里引用的还是`type=module`
 
 ## 结语
 
